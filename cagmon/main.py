@@ -11,7 +11,7 @@ import sys
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument("-v", "--version", action="store_true", help="Show version of CAGMon")
-parser.add_argument("-c", "--config", action="store", type=str, help="the path of CAGMon configuration file")
+parser.add_argument("-c", "--config", action="store_true", type=str, help="the path of CAGMon configuration file")
 
 args = parser.parse_args()
 #---------------------------------------------------------------------------------------------------------#
@@ -22,8 +22,6 @@ if arge.version:
 if not arge.config:
     parser.print_help()
     sys.exit()
-
-__author__ = 'Phil Jung <pjjung@nims.re.kr>'
 
 #---------------------------------------------------------------------------------------------------------#
 
