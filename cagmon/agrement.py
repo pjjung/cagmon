@@ -61,7 +61,10 @@ def Read_AuxChannels(main_channel, aux_channels_file_path):
 # Read configuration
 def ReadConfig(ini_path):
     config = configparser.ConfigParser()
-    config.read(unicode(ini_path,'utf-8'))
+    if sys.version_info[0] >= 3:
+        config.read(ini_file)
+    else:
+        config.read(unicode(ini_path,'utf-8'))
     
     # GENERAL
     gst = float(config['GENERAL']['gps_start_time'])
