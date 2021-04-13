@@ -1,10 +1,10 @@
 #!/usr/bin/env python2.7
 
 #---------------------------------------------------------------------------------------------------------#
-from agrement import *
-import melody
-import conchord 
-import echo 
+from cagmon.agrement import *
+import cagmon.melody
+import cagmon.conchord 
+import cagmon.echo 
 
 import argparse
 import sys
