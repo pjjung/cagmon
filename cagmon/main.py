@@ -159,9 +159,9 @@ def main():
         preprocessing_options = PreprocessingOptions(whitening, rms, filter_type, freq1, freq2)
         print('Calculating each coefficient...')
         if active_segment_only == 'no':
-            melody.Coefficients_Trend(output_path, framefiles_path, aux_channels_file_path, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
+            cagmon.melody.Coefficients_Trend(output_path, framefiles_path, aux_channels_file_path, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
         elif active_segment_only == 'yes':
-            melody.Coefficients_Trend_Segment(output_path, framefiles_path, aux_channels_file_path, segment, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
+            cagmon.melody.Coefficients_Trend_Segment(output_path, framefiles_path, aux_channels_file_path, segment, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
 
         MIC_maxvalues = Pick_maxvalues(output_path, gst, get, main_channel, coefficients_trend_stride, 'MICe')
         PCC_maxvalues = Pick_maxvalues(output_path, gst, get, main_channel, coefficients_trend_stride, 'PCC')
@@ -175,15 +175,15 @@ def main():
         
         ## Make trend plots
         print('Plotting coefficient trend...')
-        conchord.Plot_Coefficients_Trend(output_path, gst, get, coefficients_trend_stride, main_channel, AuxChannels)
+        cagmon.conchord.Plot_Coefficients_Trend(output_path, gst, get, coefficients_trend_stride, main_channel, AuxChannels)
         
         ## Make coefficient distribution trend plots
         print('Plotting coefficient distribution trend...')
         for ctype in ['MICe', 'PCC', 'Kendall']:
             if active_segment_only == 'no':
-                conchord.Plot_Distribution_Trend(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
+                cagmon.conchord.Plot_Distribution_Trend(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
             elif active_segment_only == 'yes':
-                conchord.Plot_Distribution_Trend_Segment(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
+                cagmon.conchord.Plot_Distribution_Trend_Segment(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
 
         ## Make Scatter and OmegaScan plots
         if show_additional_plots == 'yes':
@@ -193,14 +193,14 @@ def main():
                 marked_gst = max_MIC_info[1]
                 marked_get = marked_gst + coefficients_trend_stride
                 preprocessing_options = PreprocessingOptions(whitening, rms, filter_type, freq1, freq2)
-                conchord.Scatter(framefiles_path, output_path, main_channel, aux_channel, gst, get, marked_gst, marked_get, sample_rate, preprocessing_options)
+                cagmon.conchord.Scatter(framefiles_path, output_path, main_channel, aux_channel, gst, get, marked_gst, marked_get, sample_rate, preprocessing_options)
                 if coefficients_trend_stride <= 30:
-                    conchord.OmegaScan(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
+                    cagmon.conchord.OmegaScan(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
                 else:
-                    conchord.Spectrogram(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
+                    cagmon.conchord.Spectrogram(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
             
         #Make HTML file
-        echo.make_html(output_path, gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
+        cagmon.echo.make_html(output_path, gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
         
         print('\033[1m'+'\033[92m' + 'DONE' + '\033[0m')
 
