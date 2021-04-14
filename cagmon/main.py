@@ -21,8 +21,6 @@ if not args.config:
     parser.print_help()
     sys.exit()
 
-__author__ = 'Phil Jung <pjjung@nims.re.kr>'
-
 #---------------------------------------------------------------------------------------------------------#
 
 def main():
