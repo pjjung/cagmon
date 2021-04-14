@@ -483,7 +483,7 @@ def Plot_Distribution_Trend(output_path, gst, get, main_channel, stride, ctype):
             bottom = np.array([0 for i in range(len(x))])
         else:
             bottom += np.array(number_ups[count-1])
-        bar_dict[count] = {'y': number_ups[count],'bottom':list(bottom), 'label':'>={}'.format(0.9-float(count)/10)}
+        bar_dict[count] = {'y': number_ups[count],'bottom':list(bottom), 'label':'>={}'.format(round(0.9-float(count)/10),1)}
         count += 1
 
     x_ = [float(i)-float(gps_times[0]) for i in gps_times]
