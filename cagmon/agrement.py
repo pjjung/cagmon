@@ -74,7 +74,7 @@ def Get_ChannelList(single_gwf):
 def ReadConfig(ini_path):
     config = configparser.ConfigParser()
     if sys.version_info[0] >= 3:
-        config.read(ini_file)
+        config.read(ini_path)
     else:
         config.read(unicode(ini_path,'utf-8'))
     
