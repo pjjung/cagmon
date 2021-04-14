@@ -14,10 +14,10 @@ parser.add_argument("-c", "--config", action="store", type=str, help="the path o
 args = parser.parse_args()
 #---------------------------------------------------------------------------------------------------------#
 
-if arge.version:
+if args.version:
     print('0.8.0')
     sys.exit()
-if not arge.config:
+if not args.config:
     parser.print_help()
     sys.exit()
 
