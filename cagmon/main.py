@@ -1,5 +1,3 @@
-#!/usr/bin/env python2.7
-
 #---------------------------------------------------------------------------------------------------------#
 from cagmon.agrement import *
 import cagmon.melody
@@ -11,7 +9,7 @@ import sys
 parser = argparse.ArgumentParser(description=__doc__)
 
 parser.add_argument("-v", "--version", action="store_true", help="Show version of CAGMon")
-parser.add_argument("-c", "--config", action="store_true", type=str, help="the path of CAGMon configuration file")
+parser.add_argument("-c", "--config", action="store", type=str, help="the path of CAGMon configuration file")
 
 args = parser.parse_args()
 #---------------------------------------------------------------------------------------------------------#
@@ -22,6 +20,8 @@ if arge.version:
 if not arge.config:
     parser.print_help()
     sys.exit()
+
+__author__ = 'Phil Jung <pjjung@nims.re.kr>'
 
 #---------------------------------------------------------------------------------------------------------#
 
@@ -79,13 +79,8 @@ def main():
     full_listdir = framefiles_path + str(int(gst/100000))
     for gwf in sorted(listdir(full_listdir)):
         if (int((gst - (gst//100000)*100000)/32)*32 + (gst//100000)*100000) == (int(gwf.split('-')[-2])):
-            first_gwf = framefiles_path + str(int(gst/100000)) + '/' + gwf   
-    all_channels = os.popen('FrChannels {0}'.format(first_gwf)).read()
-    all_channels_list = sorted(all_channels.split('\n'))
-    ch_ls = list()
-    for channels_list in all_channels_list :
-        if channels_list.split(':')[0] == 'K1' :
-            ch_ls.append(channels_list.split(' ')[0])
+            first_gwf = framefiles_path + str(int(gst/100000)) + '/' + gwf
+    ch_ls = Get_ChannelList(first_gwf)
         
     print(HEADER+BOLD + title + ENDC)
     print(BOLD + '[Configuration Information]' + ENDC)
@@ -94,6 +89,15 @@ def main():
     print(' Main channels: {}'.format(main_channel))
     print(' Sample rate: {}Hz'.format(sample_rate))
     print(' Whitening option: {}'.format(whitening))
+    print(' RMS option: {}'.format(rms))
+    if filter_type == 'bandpass':
+        print(' Bandpass filter option: {} ({}Hz - {}Hz)'.format(filter_type, freq1, freq2))
+    elif filter_type == 'lowpass':
+        print(' Lowpass filter option: {} ({}Hz)'.format(filter_type, freq1))
+    elif filter_type == 'hingpass':
+        print(' Highpass filter option: {} ({}Hz)'.format(filter_type, freq1))
+    elif filter_type == None:
+        print(' Band/Low/Highpass filter option: no')
     print(' Active segment only option: {}'.format(active_segment_only))
     print(' Show additional plots option : {}'.format(show_additional_plots ))
     print(' Defined segment condition: {}'.format(condition))
@@ -136,10 +140,10 @@ def main():
         print(FAIL + ' [FAIL] ' + ENDC + 'Please check the segment condition, the given parameter did not exits in given frame files')
         sys.exit()
     if sample_rate*coefficients_trend_stride > 1000:
-        print(OKBLUE + ' [OK] ' + ENDC + 'Stride')
+        print(OKBLUE + ' [OK] ' + ENDC + 'Datasize')
         OK.append('OK')
     else:
-        print(FAIL + ' [FAIL] ' + ENDC + 'Please check the stride, the given stide must has greater than 1 000')
+        print(FAIL + ' [FAIL] ' + ENDC + 'Please check the stride, the given Datasize must has greater than 1 000')
         sys.exit()
     print(BOLD + '[Process Begins]' + ENDC)
 
