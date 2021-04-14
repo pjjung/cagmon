@@ -13,8 +13,9 @@ setup(
         ]
     },
     install_requires=["setuptools",
-                     "gwpy>=1.0.1",
-                     "minepy>=1.2.5"],
+                      "gwpy>=1.0.1",
+                      "lalsuite>=1.4.4",
+                      "minepy>=1.2.5"],
     python_requires=">=2.7",
     classifiers=[
         'Programming Language :: Python :: 2.7',
