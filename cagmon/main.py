@@ -169,7 +169,7 @@ def main():
 
         sorted_MIC_maxvalues = Sort_maxvalues(MIC_maxvalues)
         data_size = int(coefficients_trend_stride*sample_rate)
-        mic_alpha, mic_c = melody.MICe_parameters(data_size)
+        mic_alpha, mic_c = cagmon.melody.MICe_parameters(data_size)
 
         AuxChannels = [{'name':x[0], 'sampling_rate':'Unknown'} for x in sorted_MIC_maxvalues]
         
