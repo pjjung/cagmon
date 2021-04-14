@@ -23,10 +23,9 @@ import multiprocessing
 from multiprocessing import Process, Queue, cpu_count
 queue = Queue()
 
+import lalframe
 from gwpy.timeseries import TimeSeries
-from gwpy.astro import range_timeseries
 from gwpy.segments import DataQualityFlag
-from gwpy.plot import Plot
 from gwpy.time import tconvert
 #---------------------------------------------------------------------------------------------------------#
 
@@ -57,6 +56,21 @@ def Read_AuxChannels(main_channel, aux_channels_file_path):
             if (name != main_channel) and (name != '') and (name.split(':')[0] == 'K1'):
                 AuxChannels.append({'name':name, 'sample_rate':sample_rate})
     return AuxChannels
+
+# Read Channel Lists from the frame file
+def ChannelList_from_Frame(single_gwf):
+    frfile = lalframe.FrameUFrFileOpen(single_gwf, 'r')
+    frtoc = lalframe.FrameUFrTOCRead(frfile)
+    nsim = lalframe.FrameUFrTOCQuerySimN(frtoc)
+    for i in range(lalframe.FrameUFrTOCQueryAdcN(frtoc)):
+        yield lalframe.FrameUFrTOCQueryAdcName(frtoc, i)
+    for i in range(lalframe.FrameUFrTOCQueryProcN(frtoc)):
+        yield lalframe.FrameUFrTOCQueryProcName(frtoc, i)
+    for i in range(lalframe.FrameUFrTOCQuerySimN(frtoc)):
+        yield lalframe.FrameUFrTOCQuerySimName(frtoc, i)
+
+def Get_ChannelList(single_gwf):
+    return sorted(ChannelList_from_Frame(single_gwf))
 
 # Read configuration
 def ReadConfig(ini_path):
@@ -423,9 +437,3 @@ def Sort_maxvalues(picked_maxvalues):
     sorted_maxinfo = sorted(maxinfo_bin, key=lambda item: item[2], reverse=True)
 
     return sorted_maxinfo
-
-#---------------------------------------------------------------------------------------------------------#
-
-if __name__ == '__main__':
-    print('CAGMon Agrement is the Code that CAGmon Etude will be required to use functions in process')
-    
