@@ -15,11 +15,13 @@ args = parser.parse_args()
 #---------------------------------------------------------------------------------------------------------#
 
 if args.version:
-    print('0.8.0')
+    print('0.8.5')
     sys.exit()
 if not args.config:
     parser.print_help()
     sys.exit()
+
+__author__ = 'Phil Jung <pjjung@nims.re.kr>'
 
 #---------------------------------------------------------------------------------------------------------#
 
@@ -46,28 +48,7 @@ def main():
     mem_bytes = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')
     mem_gib = mem_bytes/(1024.**3)
 
-    gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, sample_rate, whitening, rms, filter_type, freq1, freq2, condition, main_channel, aux_channels_file_path, framefiles_path, output_path = ReadConfig(args.config)
-
-    if len(condition.split('>')) == 2:
-        channel = condition.split('>')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-    elif len(condition.split('>=')) == 2:
-        channel = condition.split('>=')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-    elif len(condition.split('==')) == 2:
-        channel = condition.split('==')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-    elif len(condition.split('<')) == 2:
-        channel = condition.split('<')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-    elif len(condition.split('<=')) == 2:
-        channel = condition.split('<=')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
+    gst, get, coefficients_trend_stride, sample_rate, filter_type, freq1, freq2, condition, main_channel, aux_channels_file_path, framefiles_path, output_path = ReadConfig(args.config)
 
     if not framefiles_path.split('/')[-1] == '':
         framefiles_path = framefiles_path + '/'
@@ -86,8 +67,6 @@ def main():
     print(' End GPS time: {}'.format(get))
     print(' Main channels: {}'.format(main_channel))
     print(' Sample rate: {}Hz'.format(sample_rate))
-    print(' Whitening option: {}'.format(whitening))
-    print(' RMS option: {}'.format(rms))
     if filter_type == 'bandpass':
         print(' Bandpass filter option: {} ({}Hz - {}Hz)'.format(filter_type, freq1, freq2))
     elif filter_type == 'lowpass':
@@ -96,9 +75,30 @@ def main():
         print(' Highpass filter option: {} ({}Hz)'.format(filter_type, freq1))
     elif filter_type == None:
         print(' Band/Low/Highpass filter option: no')
-    print(' Active segment only option: {}'.format(active_segment_only))
-    print(' Show additional plots option : {}'.format(show_additional_plots ))
-    print(' Defined segment condition: {}'.format(condition))
+    if condition[0] == 'condition':
+        if len(condition[1].split('>=')) == 2:
+            channel = condition[1].split('>=')[0]
+            if len(channel.split(' ')) >= 2:
+                channel = channel.split(' ')[0]
+        elif len(condition[1].split('>')) == 2:
+            channel = condition[1].split('>')[0]
+            if len(channel.split(' ')) >= 2:
+                channel = channel.split(' ')[0]
+        elif len(condition[1].split('==')) == 2:
+            channel = condition[1].split('==')[0]
+            if len(channel.split(' ')) >= 2:
+                channel = channel.split(' ')[0]
+        elif len(condition[1].split('<=')) == 2:
+            channel = condition[1].split('<=')[0]
+            if len(channel.split(' ')) >= 2:
+                channel = channel.split(' ')[0]
+        elif len(condition[1].split('<')) == 2:
+            channel = condition[1].split('<')[0]
+            if len(channel.split(' ')) >= 2:
+                channel = channel.split(' ')[0]
+        print(' Defined segment condition: {}'.format(condition[1]))
+    elif condition[0] == 'path':
+        print(' Segment file path: {}'.format(condition[1]))
     print(' Coefficient trend stride: {} seconds'.format(coefficients_trend_stride))
 
     print(BOLD + '[Computing Resources]' + ENDC)
@@ -131,12 +131,21 @@ def main():
         for aux_channel in aux_channel_check:
             print(FAIL + aux_channel + ENDC)
         sys.exit()
-    if channel in ch_ls:
-        print(OKBLUE + ' [OK] ' + ENDC + 'Segment')
-        OK.append('OK')
-    else:
-        print(FAIL + ' [FAIL] ' + ENDC + 'Please check the segment condition, the given parameter did not exits in given frame files')
-        sys.exit()
+
+    if condition[0] == 'condition':
+        if channel in ch_ls:
+            print(OKBLUE + ' [OK] ' + ENDC + 'Segment')
+            OK.append('OK')
+        else:
+            print(FAIL + ' [FAIL] ' + ENDC + 'Please check the segment condition, the given parameter did not exits in given frame files')
+            sys.exit()
+    elif condition[0] == 'path':
+        if 'xml' == condition[1].split('.')[-1].lower() or 'json' ==  condition[1].split('.')[-1].lower():
+            print(OKBLUE + ' [OK] ' + ENDC + 'Segment')
+            OK.append('OK')
+        else:
+            print(FAIL + ' [FAIL] ' + ENDC + 'Please check the extension of the segment file, it must be xml or json')
+            sys.exit()
     if sample_rate*coefficients_trend_stride > 1000:
         print(OKBLUE + ' [OK] ' + ENDC + 'Datasize')
         OK.append('OK')
@@ -151,15 +160,15 @@ def main():
         
         #Calculate each coefficients
         print('Loading segments...')
-        segment = Segment(cache, gst, get, condition)
-
-        Segment_to_Files(output_path, segment, gst, get)
-        preprocessing_options = PreprocessingOptions(whitening, rms, filter_type, freq1, freq2)
+        if condition[0] == 'condition':
+            segment = Segment(cache, gst, get, condition[1])
+            Segment_to_Files(output_path, segment, gst, get)
+        elif condition[0] == 'path':
+            segment = DataQualityFlag.read(condition[1])
+            Segment_to_Files(output_path, segment, gst, get)
+        preprocessing_options = PreprocessingOptions(filter_type, freq1, freq2)
         print('Calculating each coefficient...')
-        if active_segment_only == 'no':
-            cagmon.melody.Coefficients_Trend(output_path, framefiles_path, aux_channels_file_path, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
-        elif active_segment_only == 'yes':
-            cagmon.melody.Coefficients_Trend_Segment(output_path, framefiles_path, aux_channels_file_path, segment, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
+        cagmon.melody.Coefficients_Trend(output_path, framefiles_path, aux_channels_file_path, gst, get, coefficients_trend_stride, sample_rate, preprocessing_options, main_channel)
 
         MIC_maxvalues = Pick_maxvalues(output_path, gst, get, main_channel, coefficients_trend_stride, 'MICe')
         PCC_maxvalues = Pick_maxvalues(output_path, gst, get, main_channel, coefficients_trend_stride, 'PCC')
@@ -178,27 +187,10 @@ def main():
         ## Make coefficient distribution trend plots
         print('Plotting coefficient distribution trend...')
         for ctype in ['MICe', 'PCC', 'Kendall']:
-            if active_segment_only == 'no':
-                cagmon.conchord.Plot_Distribution_Trend(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
-            elif active_segment_only == 'yes':
-                cagmon.conchord.Plot_Distribution_Trend_Segment(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
+            cagmon.conchord.Plot_Distribution_Trend(output_path, gst, get, main_channel, coefficients_trend_stride, ctype)
 
-        ## Make Scatter and OmegaScan plots
-        if show_additional_plots == 'yes':
-            print('Plotting Scatter and OmegaScan plots')
-            for max_MIC_info in sorted_max_MIC_list:
-                aux_channel = max_MIC_info[0]
-                marked_gst = max_MIC_info[1]
-                marked_get = marked_gst + coefficients_trend_stride
-                preprocessing_options = PreprocessingOptions(whitening, rms, filter_type, freq1, freq2)
-                cagmon.conchord.Scatter(framefiles_path, output_path, main_channel, aux_channel, gst, get, marked_gst, marked_get, sample_rate, preprocessing_options)
-                if coefficients_trend_stride <= 30:
-                    cagmon.conchord.OmegaScan(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
-                else:
-                    cagmon.conchord.Spectrogram(framefiles_path, output_path, aux_channel, gst, get, marked_gst, marked_get, preprocessing_options)
-            
         #Make HTML file
-        cagmon.echo.make_html(output_path, gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
+        cagmon.echo.make_html(output_path, gst, get, coefficients_trend_stride, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
         
         print('\033[1m'+'\033[92m' + 'DONE' + '\033[0m')
 
