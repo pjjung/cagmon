@@ -33,7 +33,7 @@ def Make_Directions(output_path, gst, get, main_channel, stride, sample_rate):
     if not output_path.split('/')[-1] == '':
         output_path = output_path + '/'
     html_folder_name = output_path + '{0}_{1}_{2}-{3}_{4}_{5}/'.format(tconvert(gst).strftime('%Y-%m-%d'), main_channel, int(gst), int(get), float(stride), int(sample_rate))
-    folder_names = ['data', 'plots/Trend', 'plots/Scatter','plots/OmegaScan','segments']
+    folder_names = ['data', 'plots/Trend','segments']
     for folder_name in folder_names:
         path = html_folder_name + folder_name
         if not os.path.exists(path):
@@ -81,8 +81,6 @@ def ReadConfig(ini_path):
     # GENERAL
     gst = float(config['GENERAL']['gps_start_time'])
     get = float(config['GENERAL']['gps_end_time'])
-    active_segment_only = config['GENERAL']['active_segment_only']
-    show_additional_plots = config['GENERAL']['show_additional_plots']
     coefficients_trend_stride = float(config['GENERAL']['stride'])
     
     # PREPROSECCING
@@ -100,14 +98,6 @@ def ReadConfig(ini_path):
             n = round(np.log2(sample_rate))
             sample_rate = int(2**n)
     try:
-        whitening = config['PREPROSECCING']['whitening']
-    except KeyError:
-        whitening = 'no'
-    try:
-        rms =  config['PREPROSECCING']['rms']
-    except KeyError:
-        rms = 'no'
-    try:
         filter_type =  config['PREPROSECCING']['filter_type']
         if not filter_type == None:
             if filter_type == 'lowpass' or filter_type == 'highpass':
@@ -122,7 +112,13 @@ def ReadConfig(ini_path):
         freq2 = None
         
     # SEGMENT
-    condition = str(config['SEGMENT']['defined_condition'])
+    try:
+        condition = ('condition', str(config['SEGMENT']['defined_condition']))
+    except KeyError:
+        try:
+            condition = ('path', str(config['SEGMENT']['segment_file_path']))
+        except KeyError:
+            raise KeyError('Please insert one of information; the segment condition or the XML/JSON file path')
 
     # CHANNELS
     main_channel = config['CHANNELS']['main_channel']
@@ -132,7 +128,7 @@ def ReadConfig(ini_path):
     framefiles_path = config['INPUT AND OUTPUT PATHS']['frame_files_path']
     output_path = config['INPUT AND OUTPUT PATHS']['output_path']
 
-    return gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, sample_rate, whitening, rms, filter_type, freq1, freq2, condition, main_channel, aux_channels_file_path, framefiles_path, output_path
+    return gst, get, coefficients_trend_stride, sample_rate, filter_type, freq1, freq2, condition, main_channel, aux_channels_file_path, framefiles_path, output_path
 
 
 ###------------------------------------------### Read Timeseries data ###-------------------------------------------###
@@ -186,24 +182,8 @@ def GWF_Glue(framefiles_path, start, end):
     return cache
 
 # Organzeing pre-processing options
-def PreprocessingOptions(whitening=None, rms=None, filter_type=None, freq1=None, freq2=None):
+def PreprocessingOptions(filter_type=None, freq1=None, freq2=None):
     options = dict()
-
-    if not whitening == None:
-        if whitening == 'yes' or whitening == 'no':
-            options['whitening'] = whitening
-        else:
-            ValueError('Wrong whitening option was assigned, insert one of choice: yes or no')
-    elif whitening == None:
-        options['whitening'] = 'no'
-        
-    if not rms == None:
-        if rms == 'yes' or rms == 'no':
-            options['rms'] = rms
-        else:
-            ValueError('Wrong rms option was assigned, insert one of choice: yes or no')
-    elif rms == None:
-        options['rms'] = 'no'
 
     if not filter_type == None:
         if filter_type == 'lowpass':
@@ -230,31 +210,36 @@ def ReadTimeseries(cache, channel, gst, get, sample_rate=None, preprocessing_opt
             data = data.resample(float(sample_rate))
 
         elif sample_rate != None and preprocessing_options != None:
-            whitening = preprocessing_options['whitening']
-            rms = preprocessing_options['rms']
             filter_type = preprocessing_options['filter'][0]
 
-            if whitening == 'yes':
-                data = data.whiten()
-
-            if not filter_type == 'no':
-                if filter_type == 'lowpass':
-                    freq = preprocessing_options['filter'][1]
-                    data = data.lowpass(freq)
-                elif filter_type == 'highpass':
-                    freq = preprocessing_options['filter'][1]
-                    data = data.highpass(freq)
-                elif filter_type == 'bandpass':
-                    freq1 = preprocessing_options['filter'][1]
-                    freq2 = preprocessing_options['filter'][2]
-                    if freq1 <= freq2:
-                        data = data.bandpass(freq1, freq2)
-                    else:
-                        data = data.bandpass(freq2, freq1)
+            if not filter_type == 'no': 
+                if (not 'BNS' in channel) :
+                    if filter_type == 'lowpass':
+                        freq = preprocessing_options['filter'][1]
+                        if float(data.sample_rate.value)/2 > freq:
+                            data = data.lowpass(freq)
+                    elif filter_type == 'highpass':
+                        freq = preprocessing_options['filter'][1]
+                        if float(data.sample_rate.value)/2 > freq:
+                            data = data.highpass(freq)
+                    elif filter_type == 'bandpass':
+                        freq1 = preprocessing_options['filter'][1]
+                        freq2 = preprocessing_options['filter'][2]
+                        if freq1 <= freq2:
+                            if float(data.sample_rate.value)/2 > freq1 and float(data.sample_rate.value)/2 > freq2:
+                                data = data.bandpass(freq1, freq2)
+                            elif float(data.sample_rate.value)/2 > freq1 and float(data.sample_rate.value)/2 <= freq2:
+                                data = data.highpass(freq1)
+                            elif float(data.sample_rate.value)/2 <= freq1 and float(data.sample_rate.value)/2 > freq2:
+                                data = data.lowpass(freq2)  
+                        else:
+                            if float(data.sample_rate.value)/2 > freq2 and float(data.sample_rate.value)/2 > freq1:
+                                data = data.bandpass(freq2, freq1)
+                            elif float(data.sample_rate.value)/2 > freq2 and float(data.sample_rate.value)/2 <= freq1:
+                                data = data.highpass(freq2)
+                            elif float(data.sample_rate.value)/2 <= freq2 and float(data.sample_rate.value)/2 > freq1:
+                                data = data.lowpass(freq1)  
     
-            if rms == 'yes':
-                data = data.rms()
-
             if not float(sample_rate) == float(data.sample_rate.value):
                 data = data.resample(float(sample_rate))
                 
@@ -313,20 +298,20 @@ def Parallel_Load_data(cache, main_channel, AuxChannels, gst, get, sample_rate, 
 ###------------------------------------------### Read and Make the segment file ###-------------------------------------------###
 # Segment
 def Segment(cache, gst, get, condition):
-    if len(condition.split('>')) == 2:
-        channel = condition.split('>')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-        value = int(condition.split('>')[1])
-        locked = ReadTimeseries(cache, channel, gst, get)
-        locking = locked > value
-    elif len(condition.split('>=')) == 2:
+    if len(condition.split('>=')) == 2:
         channel = condition.split('>=')[0]
         if len(channel.split(' ')) >= 2:
             channel = channel.split(' ')[0]
         value = int(condition.split('>=')[1])
         locked = ReadTimeseries(cache, channel, gst, get)
         locking = locked >= value
+    elif len(condition.split('>')) == 2:
+        channel = condition.split('>')[0]
+        if len(channel.split(' ')) >= 2:
+            channel = channel.split(' ')[0]
+        value = int(condition.split('>')[1])
+        locked = ReadTimeseries(cache, channel, gst, get)
+        locking = locked > value
     elif len(condition.split('==')) == 2:
         channel = condition.split('==')[0]
         if len(channel.split(' ')) >= 2:
@@ -334,13 +319,6 @@ def Segment(cache, gst, get, condition):
         value = int(condition.split('==')[1])  
         locked = ReadTimeseries(cache, channel, gst, get)
         locking = locked == value
-    elif len(condition.split('<')) == 2:
-        channel = condition.split('<')[0]
-        if len(channel.split(' ')) >= 2:
-            channel = channel.split(' ')[0]
-        value = int(condition.split('<')[1]) 
-        locked = ReadTimeseries(cache, channel, gst, get)
-        locking = locked < value
     elif len(condition.split('<=')) == 2:
         channel = condition.split('<=')[0]
         if len(channel.split(' ')) >= 2:
@@ -348,6 +326,13 @@ def Segment(cache, gst, get, condition):
         value = int(condition.split('<=')[1])
         locked = ReadTimeseries(cache, channel, gst, get)
         locking = locked <= value
+    elif len(condition.split('<')) == 2:
+        channel = condition.split('<')[0]
+        if len(channel.split(' ')) >= 2:
+            channel = channel.split(' ')[0]
+        value = int(condition.split('<')[1]) 
+        locked = ReadTimeseries(cache, channel, gst, get)
+        locking = locked < value
     segment = locking.to_dqflag(round=True)
     return segment
 
@@ -355,14 +340,47 @@ def Segment(cache, gst, get, condition):
 def Segment_to_Files(output_path, segment, gst, get):
     if not output_path.split('/')[-1] == '':
         output_path = output_path + '/'
+        
+    if int(gst) >= int(segment.known[0][0]) and int(get) <= int(segment.known[0][1]):
+        wanted_seg = np.arange(gst, get+1, 1) 
+
+    elif int(gst) <= int(segment.known[0][0]) and int(get) <= int(segment.known[0][1]):
+        wanted_seg_lower = np.arange(gst, int(segment.known[0][0]), 1) # inactive
+        wanted_seg = np.arange(int(segment.known[0][0]), get+1, 1)
+
+    elif int(gst) <= int(segment.known[0][0]) and int(get) >= int(segment.known[0][1]):
+        wanted_seg_lower = np.arange(gst, int(segment.known[0][0]), 1) # inactive
+        wanted_seg = np.arange(int(segment.known[0][0]), int(segment.known[0][1])+1, 1)  
+        wanted_seg_upper = np.arange(int(segment.known[0][1])+1, get+1, 1) # inactive
+
+    elif int(gst) >= int(segment.known[0][0]) and int(get) >= int(segment.known[0][1]): 
+        wanted_seg = np.arange(int(segment.known[0][0]), int(segment.known[0][1])+1, 1)  
+        wanted_seg_upper = np.arange(int(segment.known[0][1])+1, get+1, 1)  # inactive
+
+    active_list = list()
+    for start, end in segment.active:
+        active = set()
+        for seg in wanted_seg:
+            if start <= seg <= end:
+                active.add(seg)
+        try:
+            Active = list(active)
+            active_list.append((Active[0], Active[-1]))
+        except IndexError:
+            pass
+
+    segment = DataQualityFlag(known=[(gst, get)], active=active_list )
+        
     try:
-        segment.write('{0}segments/FlagSegment.xml'.format(output_path))
+        segment.write('{0}segments/FlagSegment.json'.format(output_path))
     except IOError:
         pass
+    
     flag = segment.active
-    flag_condition = segment.name
-    flaged_segments = [flag_condition]
-    if len(flag) == 1:
+    flaged_segments = list()
+    if len(flag) == 0:
+        flaged_segments.append('{0} {1} {2}'.format(gst, get, 'Inactive'))
+    elif len(flag) == 1:
         if int(gst) == int(flag[0][0]) and int(get) == int(flag[0][1]):
             flaged_segments.append('{0} {1} {2}'.format(flag[0][0], flag[0][1], 'Active'))
         else:
