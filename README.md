@@ -8,7 +8,7 @@ The CAGMon is the tool that evaluates the dependence between the primary and aux
 The goal of this project is to find a systematic way of identifying the abnormal glitches in the gravitational-wave data using various methods of correlation analysis. Usually, the community such as LIGO, Virgo, and KAGRA uses a conventional way of finding glitches in auxiliary channels of the detector - Klein-Welle, Omicron, Ordered Veto Lists, etc. However, some different ways can be possible to find and monitor them in a (quasi-) realtime. Also, the method can point out which channel is responsible for the found glitch. In this project, we study its possible to apply three different correlation methods - maximal information coefficient, Pearson's correlation coefficient, and Kendall's tau coefficient - in the gravitational wave data from the KAGRA detector.
 
 The CAGMon algorithm is described in
-https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130
+https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130 and
 https://arxiv.org/abs/2107.03516
 
 ## Installation
