@@ -48,9 +48,9 @@ def Kendall(loaded_dataset, main_channel):
 
 # Estimate appropriate value of Alpha and c for MICe
 def MICe_parameters(data_size):
-    NPOINTS_BINS = [1,    25,   50,   250,   500, 1000, 2500, 5000, 10000, 40000]
-    ALPHAS =       [0.85, 0.80, 0.75, 0.70, 0.65, 0.6,  0.55, 0.5,  0.45,  0.4]
-    CS =           [5,    5,    5,    5,     5,   4,    3,    1,    1,     1]
+    NPOINTS_BINS = [1,    25,   50,   250,   500, 1000, 2500, 4000, 8000, 10000, 40000]
+    ALPHAS =       [0.85, 0.80, 0.75, 0.70, 0.55, 0.5,  0.55, 0.55, 0.5,  0.45,  0.4]
+    CS =           [5,    5,    5,    5,     7,   7,    6,    6,    0.7,  1,     1]
     if data_size < 1:
         raise ValueError("the number of data size must be >=1")
 
