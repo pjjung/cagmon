@@ -133,7 +133,7 @@ def Plot_Coefficients_Trend(output_path, gst, get, stride, main_channel, AuxChan
         flag = segment.active
         flaged_segments = list()
         if len(flag) == 0:
-            flaged_segments.append('{0} {1} {2}'.format(gst, get, 'Inactive'))
+            flaged_segments.append([gst, get,'darkred'])
         elif len(flag) == 1:
             if int(gst) == int(flag[0][0]) and int(get) == int(flag[0][1]):
                 flaged_segments.append([flag[0][0], flag[0][1], 'limegreen'])
@@ -333,7 +333,7 @@ def Plot_Distribution_Trend(output_path, gst, get, main_channel, stride, ctype):
     flag = segment.active
     flaged_segments = list()
     if len(flag) == 0:
-        flaged_segments.append('{0} {1} {2}'.format(gst, get, 'Inactive'))
+        flaged_segments.append([gst, get,'darkred'])
     elif len(flag) == 1:
         if int(gst) == int(flag[0][0]) and int(get) == int(flag[0][1]):
             flaged_segments.append([flag[0][0], flag[0][1], 'limegreen'])
