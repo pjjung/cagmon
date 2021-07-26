@@ -106,6 +106,8 @@ def ReadConfig(ini_path):
             elif filter_type == 'bandpass':
                 freq1 = float(config['PREPROSECCING']['frequency1'])
                 freq2 = float(config['PREPROSECCING']['frequency2'])
+            else:
+                raise ValueError('Wrong filter name was assigned, insert one of name bellow: \n lowpass\n highpass\n bandpass')
     except KeyError:
         filter_type = None
         freq1 = None
