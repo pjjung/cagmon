@@ -123,8 +123,8 @@ N = args.size
 mine_alpha = args.alpha
 mine_c = args.c
 
-n_null = 500 # number of null datasets to estimate rejection regions
-n_alt = 500 # number of alternative datasets
+n_null = 500 #null datasets
+n_alt = 500 #alternative datasets
 
 ##------------------------------------------------------------------------------------------##
 
