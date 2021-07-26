@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='CAGMon',
-    version='0.8.0',
+    version='0.8.5',
     author='Phil Jung',
     author_email='pjjung@nims.re.kr',
     description='Correlation Analysis based on Glitch Monitoring',
-    packages=find_packages(exclude=['test']),
+    packages=find_packages(exclude=['test','examples]),
     entry_points={
         "console_scripts": [
             "cagmon = cagmon.main:main"
