@@ -22,13 +22,9 @@ def html_head():
     
     return html_head
 
-def html_configuration(gst, get, active_segment_only, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate):
+def html_configuration(gst, get, coefficients_trend_stride, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate):
     options = ''
-    if whitening == 'yes':
-        options += ' whitening: yes'
-    elif rms == 'yes':
-        options += ', rms: yes'
-    elif filter_type == 'lowpass':
+    if filter_type == 'lowpass':
         options += ' ,lowpass filter: {}Hz'.format(freq1)
     elif filter_type == 'highpass':
         options += ', highpass filter: {}Hz'.format(freq1)
@@ -42,23 +38,23 @@ def html_configuration(gst, get, active_segment_only, coefficients_trend_stride,
         </div>
         <hr id="line"/>
         <div id="config_text">
-            <span>{0} - {1} </span>
+            <span>{0} - {1} </span>
             <div id="config_text_detail">
-              <span>Active segment only: {2} <a draggable="true" href="./segments/FlagSegment.txt" target="_blank" rel="noopener">txt</a> <a draggable="true" href="./segments/FlagSegment.xml" target="_blank" rel="noopener">xml</a> </span>
+              <span>Active segment: <a draggable="true" href="./segments/FlagSegment.txt" target="_blank" rel="noopener">txt</a> <a draggable="true" href="./segments/FlagSegment.json" target="_blank" rel="noopener">json</a> </span>
             </div>
             <div id="config_text_detail">
-              <span>stride: {3} seconds, sample rate: {9}Hz, data size: {4}{5}</span>
+              <span>stride: {2} seconds, sample rate: {8}Hz, data size: {3}{4}</span>
             </div>
             <div id="config_text_detail">
-              <span>main channel: {6}</span>
+              <span>main channel: {5}</span>
             </div>
             <div id="config_text_detail">
-              <span>MICe Alpha: {7}, MICe c: {8}</span>
+              <span>MICe Alpha: {6}, MICe c: {7}</span>
             </div>
         </div>
       </div>
     </div>
-    '''.format(gst, get, active_segment_only, coefficients_trend_stride, int(coefficients_trend_stride*sample_rate), options, main_channel, mic_alpha, mic_c, sample_rate)
+    '''.format(gst, get, coefficients_trend_stride, int(coefficients_trend_stride*sample_rate), options, main_channel, mic_alpha, mic_c, sample_rate)
     
     return html_configuration
 
@@ -194,7 +190,7 @@ def html_summary(gst, get, coefficients_trend_stride, main_channel, MIC_maxvalue
     return html_summary
 
 
-def html_details(output_path, gst, get, coefficients_trend_stride, main_channel, show_additional_plots, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues):
+def html_details(output_path, gst, get, coefficients_trend_stride, main_channel, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues):
     html_details_subtitle = '''
     <div class="row Details" id="row">
       <div class="cell" id="cell">
@@ -205,104 +201,42 @@ def html_details(output_path, gst, get, coefficients_trend_stride, main_channel,
     </div>
     '''
 
-    if show_additional_plots == 'no':
-        html_details_box ='''
-        <div class="row Details" id="row_detail">
-          <div class="cell" id="cell_detail">
-            <div id="detail_contents">
-              <span id="detail_text">Datetime: {12}</span>
-              <div id="detail_text">GPS time: {7}
-              </div>
-              <div id="detail_text">Channel: {0}
-              </div>
-              <div id="detail_text">MICe: {1}
-              </div>
-              <div id="detail_text">PCC: {2}
-              </div>
-              <div id="detail_text">Kendall&#039;s tau: {3}
-              </div>
-              <div id="detail_text">Median of MICe: {4}
-              </div>
-              <div id="detail_text">Median of PCC: {5}
-              </div>
-              <div id="detail_text">Median of Kendall: {6}
-              </div>
-              <div id="detail_text">Other MICe values: <a draggable="true" href="{8}" target="_blank" rel="noopener">txt</a>
-              </div>
-              <div id="detail_text">Other PCC values: <a draggable="true" href="{9}" target="_blank" rel="noopener">txt</a>
-              </div>
-              <div id="detail_text">Other Kendall values: <a draggable="true" href="{10}" target="_blank" rel="noopener">txt</a>
-              </div>
-            </div>
-        </div>
-        <div class="cell" id="cell_image">
-          <div id="slider">
-            <img id="slide_image" src="{11}"/>
+    html_details_box ='''
+    <div class="row Details" id="row_detail">
+      <div class="cell" id="cell_detail">
+        <div id="detail_contents">
+          <span id="detail_text">Datetime: {12}</span>
+          <div id="detail_text">GPS time: {7}
+          </div>
+          <div id="detail_text">Channel: {0}
+          </div>
+          <div id="detail_text">MICe: {1}
+          </div>
+          <div id="detail_text">PCC: {2}
+          </div>
+          <div id="detail_text">Kendall&#039;s tau: {3}
+          </div>
+          <div id="detail_text">Median of MICe: {4}
+          </div>
+          <div id="detail_text">Median of PCC: {5}
+          </div>
+          <div id="detail_text">Median of Kendall: {6}
+          </div>
+          <div id="detail_text">Other MICe values: <a draggable="true" href="{8}" target="_blank" rel="noopener">txt</a>
+          </div>
+          <div id="detail_text">Other PCC values: <a draggable="true" href="{9}" target="_blank" rel="noopener">txt</a>
+          </div>
+          <div id="detail_text">Other Kendall values: <a draggable="true" href="{10}" target="_blank" rel="noopener">txt</a>
           </div>
         </div>
-        </div>
-        '''
-    elif show_additional_plots == 'yes':
-        html_details_box ='''
-        <div class="row Details" id="row_detail">
-          <div class="cell" id="cell_detail">
-            <div id="detail_contents">
-              <span id="detail_text">Datetime: {14}</span>
-              <div id="detail_text">GPS time: {7}
-              </div>
-              <div id="detail_text">Channel: {0}
-              </div>
-              <div id="detail_text">MICe: {1}
-              </div>
-              <div id="detail_text">PCC: {2}
-              </div>
-              <div id="detail_text">Kendall&#039;s tau: {3}
-              </div>
-              <div id="detail_text">Median of MICe: {4}
-              </div>
-              <div id="detail_text">Median of PCC: {5}
-              </div>
-              <div id="detail_text">Median of Kendall: {6}
-              </div>
-              <div id="detail_text">Other MICe values: <a draggable="true" href="{8}" target="_blank" rel="noopener">txt</a>
-              </div>
-              <div id="detail_text">Other PCC values: <a draggable="true" href="{9}" target="_blank" rel="noopener">txt</a>
-              </div>
-              <div id="detail_text">Other Kendall values: <a draggable="true" href="{10}" target="_blank" rel="noopener">txt</a>
-              </div>
-            </div>
-        </div>
-        <div class="cell" id="cell_image">
-          <div id="slider">
-            <div class="gjs-lory-frame" id="slider_frame">
-              <div class="gjs-lory-slides" id="slider_slides">
-                <div class="gjs-lory-slide" id="slider_slide">
-                  <img id="slide_image" src="{11}"/>
-                </div>
-                <div class="gjs-lory-slide" id="slider_slide">
-                  <img id="slide_image" src="{12}"/>
-                </div>
-                <div class="gjs-lory-slide" id="slider_slide">
-                  <img id="slide_image" src="{13}"/>
-                </div>
-              </div>
-            </div>
-            <span class="gjs-lory-prev" id="slider_left_arrow"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 501.5 501.5">
-              <g>
-                <path fill="#2E435A" d="M302.67 90.877l55.77 55.508L254.575 250.75 358.44 355.116l-55.77 55.506L143.56 250.75z">
-                </path>
-              </g>
-              </svg></span>
-            <span class="gjs-lory-next" id="slider_right_arrow"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 501.5 501.5">
-              <g>
-                <path fill="#2E435A" d="M199.33 410.622l-55.77-55.508L247.425 250.75 143.56 146.384l55.77-55.507L358.44 250.75z">
-                </path>
-              </g>
-              </svg></span>
-          </div>
-        </div>
-        </div>
-        '''
+    </div>
+    <div class="cell" id="cell_image">
+      <div id="slider">
+        <img id="slide_image" src="{11}"/>
+      </div>
+    </div>
+    </div>
+    '''
 
     for channel in MIC_maxvalues.keys():
         txt_bin = list()
@@ -328,7 +262,6 @@ def html_details(output_path, gst, get, coefficients_trend_stride, main_channel,
         f = open('{0}data/Kendall_{1}-{2}_{3}.txt'.format(output_path, int(gst), int(get-gst), channel), 'w')
         f.write('\n'.join(txt_bin))
         f.close()
-
 
     details = ''''''
     for max_MIC_info in sorted_MIC_maxvalues:
@@ -362,10 +295,7 @@ def html_details(output_path, gst, get, coefficients_trend_stride, main_channel,
         MIC_filelink = './data/MICe_{0}-{1}_{2}.txt'.format(int(gst), int(get-gst), channel)
         PCC_filelink = './data/PCC_{0}-{1}_{2}.txt'.format(int(gst), int(get-gst), channel)
         Kendall_filelink = './data/Kendall_{0}-{1}_{2}.txt'.format(int(gst), int(get-gst), channel)
-        if show_additional_plots == 'no':
-            box = html_details_box.format(channel, MIC, PCC, Kendall, MIC_median, PCC_median, Kendall_median, segment, MIC_filelink, PCC_filelink, Kendall_filelink, trend_plot, datetime)
-        elif show_additional_plots == 'yes':
-            box = html_details_box.format(channel, MIC, PCC, Kendall, MIC_median, PCC_median, Kendall_median, segment, MIC_filelink, PCC_filelink, Kendall_filelink, trend_plot, scatter_plot, omegascan_plot, datetime)
+        box = html_details_box.format(channel, MIC, PCC, Kendall, MIC_median, PCC_median, Kendall_median, segment, MIC_filelink, PCC_filelink, Kendall_filelink, trend_plot, datetime)
         details += box
         
     html_details = html_details_subtitle + details
@@ -376,8 +306,8 @@ def html_foot():
     html_foot = '''
     <div class="row Foot" id="foot_row">
       <div class="cell" id="foot_cell">
-        <div id="foot_text">Designed by Phil Jung in Korea Gravitational Wave Group (KGWG) </div>
-        <div id="foot_text">e-mail: pjjung@nims.re.kr  </div>
+        <div id="foot_text">Designed by NIMS in Daejeon 
+        </div>
       </div>
     </div>
     '''
@@ -607,11 +537,11 @@ def css_text():
 
     return css_text
 
-def make_html(output_path, gst, get, active_segment_only, show_additional_plots, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues):
+def make_html(output_path, gst, get, coefficients_trend_stride, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues):
     head = html_head()
-    configuration = html_configuration(gst, get, active_segment_only, coefficients_trend_stride, whitening, rms, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate)
+    configuration = html_configuration(gst, get, coefficients_trend_stride, filter_type, freq1, freq2, main_channel, mic_alpha, mic_c, sample_rate)
     summary = html_summary(gst, get, coefficients_trend_stride, main_channel, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
-    details = html_details(output_path, gst, get, coefficients_trend_stride, main_channel, show_additional_plots, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
+    details = html_details(output_path, gst, get, coefficients_trend_stride, main_channel, MIC_maxvalues, PCC_maxvalues, Kendall_maxvalues, sorted_MIC_maxvalues)
     foot = html_foot()
     script = html_script()
     
