@@ -12,6 +12,7 @@ https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130 
 https://arxiv.org/abs/2107.03516
 
 ## Installation
+* Manual installation
 <pre>
 <code>
 git clone https://github.com/pjjung/cagmon.git
@@ -20,7 +21,14 @@ cd cagmon-main
 python setup.py install
 </code>
 </pre> 
- 
+
+* pip install will be supported
+<pre>
+<code>
+
+</code>
+</pre> 
+
 ## Syntax of configuration files (.ini)
 * Example of full configurations
 <pre>
