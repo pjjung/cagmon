@@ -306,8 +306,8 @@ def html_foot():
     html_foot = '''
     <div class="row Foot" id="foot_row">
       <div class="cell" id="foot_cell">
-        <div id="foot_text">Designed by NIMS in Daejeon 
-        </div>
+        <div id="foot_text">Designed by Phil Jung in Korea Gravitational Wave Group (KGWG) </div>
+        <div id="foot_text">e-mail: pjjung@nims.re.kr </div>
       </div>
     </div>
     '''
@@ -521,7 +521,7 @@ def css_text():
       font-size:18px;
     }
     #foot_text{
-      padding:10px;
+      padding:2px;
       font-family:Helvetica, sans-serif;
       letter-spacing:0;
       font-size:15px;
