@@ -289,8 +289,6 @@ def html_details(output_path, gst, get, coefficients_trend_stride, main_channel,
         segment = '{0} - {1}'.format(start, start+coefficients_trend_stride)
 
         trend_plot = './plots/Trend/Coefficients-Trend_{0}-{1}_{2}_{3}.png'.format(int(gst), int(get-gst), channel, int(coefficients_trend_stride))
-        scatter_plot = './plots/Scatter/Scatter_{0}-{1}_{2}.png'.format(int(gst), int(get-gst), channel)
-        omegascan_plot = './plots/OmegaScan/OmegaScan_{0}-{1}_{2}.png'.format(int(gst), int(get-gst), channel)
         
         MIC_filelink = './data/MICe_{0}-{1}_{2}.txt'.format(int(gst), int(get-gst), channel)
         PCC_filelink = './data/PCC_{0}-{1}_{2}.txt'.format(int(gst), int(get-gst), channel)
