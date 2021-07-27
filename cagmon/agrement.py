@@ -343,21 +343,20 @@ def Segment_to_Files(output_path, segment, gst, get):
     if not output_path.split('/')[-1] == '':
         output_path = output_path + '/'
         
-    if int(gst) >= int(segment.known[0][0]) and int(get) <= int(segment.known[0][1]):
+    if int(gst) == int(segment.known[0][0]) and int(get) == int(segment.known[0][1]):
         wanted_seg = np.arange(gst, get+1, 1) 
-
-    elif int(gst) <= int(segment.known[0][0]) and int(get) <= int(segment.known[0][1]):
+    elif int(gst) <= int(segment.known[0][0]) and int(get) < int(segment.known[0][1]):
         wanted_seg_lower = np.arange(gst, int(segment.known[0][0]), 1) # inactive
         wanted_seg = np.arange(int(segment.known[0][0]), get+1, 1)
-
-    elif int(gst) <= int(segment.known[0][0]) and int(get) >= int(segment.known[0][1]):
+    elif int(gst) <= int(segment.known[0][0]) and int(get) > int(segment.known[0][1]):
         wanted_seg_lower = np.arange(gst, int(segment.known[0][0]), 1) # inactive
         wanted_seg = np.arange(int(segment.known[0][0]), int(segment.known[0][1])+1, 1)  
         wanted_seg_upper = np.arange(int(segment.known[0][1])+1, get+1, 1) # inactive
-
-    elif int(gst) >= int(segment.known[0][0]) and int(get) >= int(segment.known[0][1]): 
-        wanted_seg = np.arange(int(segment.known[0][0]), int(segment.known[0][1])+1, 1)  
+    elif int(gst) > int(segment.known[0][0]) and int(get) >= int(segment.known[0][1]): 
+        wanted_seg = np.arange(gst, int(segment.known[0][1])+1, 1)  
         wanted_seg_upper = np.arange(int(segment.known[0][1])+1, get+1, 1)  # inactive
+    elif int(gst) > int(segment.known[0][0]) and int(get) <= int(segment.known[0][1]):    
+        wanted_seg = np.arange(gst, get+1, 1) 
 
     active_list = list()
     for start, end in segment.active:
@@ -366,7 +365,7 @@ def Segment_to_Files(output_path, segment, gst, get):
             if start <= seg <= end:
                 active.add(seg)
         try:
-            Active = list(active)
+            Active = sorted(list(active))
             active_list.append((Active[0], Active[-1]))
         except IndexError:
             pass
