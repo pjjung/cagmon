@@ -36,10 +36,10 @@ python setup.py install
 [GENERAL]
 gps_start_time = 1234500000
 gps_end_time = 1234599968
-stride = 64
+stride = 512
 
 [PREPROSECCING]
-datasize = 1024
+datasize = 8192
 filter_type = highpass (or low/bandpass)
 frequency1 = 10 (if bandpass file is applied, two frequency conditions are required; frequncy1 and crequncy2)
 
@@ -47,7 +47,7 @@ frequency1 = 10 (if bandpass file is applied, two frequency conditions are requi
 defined_condition = LSC_LOCK_STATE_CHANNEL == 10 (or segment_file_path = /path/to/segment/file/)
 
 [CHANNELS]
-main_channel = K1:CAL-CS_PROC_C00_STRAIN_DBL_DQ
+main_channel = GW-STRAIN_CHANNEL
 aux_channels_file_path = /path/to/channel/list/file
 
 [INPUT AND OUTPUT PATHS]
@@ -62,13 +62,13 @@ output_path = /path/to/output/folder
 [GENERAL]
 gps_start_time = 1234500000
 gps_end_time = 1234599968
-stride = 64
+stride = 512
 
 [SEGMENT]
 defined_condition = LSC_LOCK_STATE_CHANNEL == 10 (or segment_file_path = /path/to/segment/file/)
 
 [CHANNELS]
-main_channel = K1:CAL-CS_PROC_C00_STRAIN_DBL_DQ
+main_channel = GW-STRAIN_CHANNEL
 aux_channels_file_path = /path/to/channel/list/file
 
 [INPUT AND OUTPUT PATHS]
