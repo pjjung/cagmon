@@ -16,8 +16,7 @@ https://arxiv.org/abs/2107.03516
 <pre>
 <code>
 git clone https://github.com/pjjung/cagmon.git
-zip -r cagmon-main.zip ./
-cd cagmon-main
+cd cagmon
 python setup.py install
 </code>
 </pre> 
