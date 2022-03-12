@@ -21,7 +21,7 @@ The goal of this project is to find a systematic way of identifying the abnormal
 
 The CAGMon algorithm is described in
 - Piljong Jung, Sang Hoon Oh, Young-Min Kim, Edwin J. Son, John J. Oh, *Optimizing Parameters of Information-Theoretic Correlation Measurement for Multi-Channel Time-Series Datasets in Gravitational Wave Detectors*, [arXiv:2107.03516](https://arxiv.org/abs/2107.03516)
-- Piljong Jung, Sang Hoon Oh, Young-Min Kim, Edwin J. Son, John J. Oh,, *Identifying and diagnosing coherent associations and causalities between multi-channels of the gravitational wave detector*, [JGW-P2113130](https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130)
+- Piljong Jung, Sang Hoon Oh, Young-Min Kim, Edwin J. Son, John J. Oh, *Identifying and diagnosing coherent associations and causalities between multi-channels of the gravitational wave detector*, [JGW-P2113130](https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130)
 
 
 ## Installation
