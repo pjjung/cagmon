@@ -25,15 +25,11 @@ The CAGMon algorithm is described in
 
 
 ## Installation
-* Manual installation
+* You can do:
 ```
 $ git clone https://github.com/pjjung/cagmon.git
 $ cd cagmon
 $ python setup.py install
-```
-* or, you can do:
-```
-# pip install will be supported
 ```
 
 ## Syntax of configuration files (.ini)
