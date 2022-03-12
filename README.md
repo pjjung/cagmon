@@ -25,7 +25,7 @@ The CAGMon algorithm is described in
 
 
 ## Installation
-* You can do:
+
 ```
 $ git clone https://github.com/pjjung/cagmon.git
 $ cd cagmon
