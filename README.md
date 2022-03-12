@@ -7,26 +7,31 @@
 The CAGMon is the tool that evaluates the dependence between the primary and auxiliary channels of Gravitational-Wave detectors.    
 The goal of this project is to find a systematic way of identifying the abnormal glitches in the gravitational-wave data using various methods of correlation analysis. Usually, the community such as LIGO, Virgo, and KAGRA uses a conventional way of finding glitches in auxiliary channels of the detector - Klein-Welle, Omicron, Ordered Veto Lists, etc. However, some different ways can be possible to find and monitor them in a (quasi-) realtime. Also, the method can point out which channel is responsible for the found glitch. In this project, we study its possible to apply three different correlation methods - maximal information coefficient, Pearson's correlation coefficient, and Kendall's tau coefficient - in the gravitational wave data from the KAGRA detector.
 
+## Status
+
+[![Build Status](https://img.shields.io/badge/version-0.8.5-blue)](https://img.shields.io/badge/version-0.8.5-blue)
+
+[![Build Status](https://img.shields.io/badge/license-%20GPLv3-green)](https://img.shields.io/badge/license-%20GPLv3-green)
+[![Build Status](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-brightgreen)](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-brightgreen)
+
+## References
+
 The CAGMon algorithm is described in
-https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130 and
-https://arxiv.org/abs/2107.03516
+- Piljong Jung, Sang Hoon Oh, Young-Min Kim, Edwin J. Son, John J. Oh, *Optimizing Parameters of Information-Theoretic Correlation Measurement for Multi-Channel Time-Series Datasets in Gravitational Wave Detectors*, [arXiv:2107.03516](https://arxiv.org/abs/2107.03516)
+- Piljong Jung, Sang Hoon Oh, Young-Min Kim, Edwin J. Son, John J. Oh,, *Identifying and diagnosing coherent associations and causalities between multi-channels of the gravitational wave detector*, [JGW-P2113130](https://gwdoc.icrr.u-tokyo.ac.jp/cgi-bin/private/DocDB/ShowDocument?docid=13130)
+
 
 ## Installation
 * Manual installation
-<pre>
-<code>
-git clone https://github.com/pjjung/cagmon.git
-cd cagmon
-python setup.py install
-</code>
-</pre> 
-
-* pip install will be supported
-<pre>
-<code>
-
-</code>
-</pre> 
+```
+$ git clone https://github.com/pjjung/cagmon.git
+$ cd cagmon
+$ python setup.py install
+```
+* or, you can do:
+```
+# pip install will be supported
+```
 
 ## Syntax of configuration files (.ini)
 * Example of full configurations
@@ -107,3 +112,8 @@ K1:AUX_CHANNEL_NAME_3 SAMPLE_RATE
 cagmon --config cagmon_config.ini
 </code>
 </pre> 
+
+## License
+
+The CAGMon is following the GNU General Public License version 3. Under this term, you can redistribute and/or modify it.
+See [the GNU free software license](http://www.gnu.org/licenses/) for more details.
