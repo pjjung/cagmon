@@ -26,7 +26,7 @@ The CAGMon algorithm is described in
 
 ## Installation
 
-```
+```sh
 $ git clone https://github.com/pjjung/cagmon.git
 $ cd cagmon
 $ python setup.py install
@@ -106,7 +106,7 @@ K1:AUX_CHANNEL_NAME_3 SAMPLE_RATE
 </pre> 
 
 ## Execute the CAGMon etude
-```
+```sh
 $ cagmon --config cagmon_config.ini
 ```
 
