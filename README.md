@@ -107,11 +107,9 @@ K1:AUX_CHANNEL_NAME_3 SAMPLE_RATE
 </pre> 
 
 ## Execute the CAGMon etude
-<pre>
-<code>
-cagmon --config cagmon_config.ini
-</code>
-</pre> 
+```
+$ cagmon --config cagmon_config.ini
+```
 
 ## License
 
