@@ -13,8 +13,8 @@ The goal of this project is to find a systematic way of identifying the abnormal
 
 [![Build Status](https://img.shields.io/badge/license-%20GPLv3-green)](http://www.gnu.org/licenses/)
 [![Build Status](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-brightgreen)](https://minepy.readthedocs.io/en/latest/)
-[![Build Status](https://img.shields.io/badge/packages-GWpy-yellow)](https://gwpy.github.io)
-[![Build Status](https://img.shields.io/badge/packages-minepy-yellowgreen)](https://minepy.readthedocs.io/en/latest/)
+[![Build Status](https://img.shields.io/badge/package-gwpy-yellow)](https://gwpy.github.io)
+[![Build Status](https://img.shields.io/badge/package-minepy-yellowgreen)](https://minepy.readthedocs.io/en/latest/)
 
 ## References
 
