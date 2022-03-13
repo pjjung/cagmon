@@ -19,7 +19,7 @@ setup(
     python_requires=">=2.7",
     classifiers=[
         'Programming Language :: Python :: 2.7',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Operating System :: OS Independent',
     ],
 )
