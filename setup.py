@@ -22,7 +22,7 @@ setup(
     url='https://github.com/pjjung/cagmon',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    packages=find_packages(exclude=['test','examples]),
+    packages=find_packages(exclude=['test','examples']),
     entry_points={
         "console_scripts": [
             "cagmon = cagmon.main:main"
