@@ -1,9 +1,10 @@
+```
      ,-----.  ,---.   ,----.   ,--.   ,--.                            ,--.             ,--.        
     '  .--./ /  O  \ '  .-./   |   `.'   | ,---. ,--,--,      ,---. ,-'  '-.,--.,--. ,-|  | ,---.  
     |  |    |  .-.  ||  | .---.|  |'.'|  || .-. ||      \    | .-. :'-.  .-'|  ||  |' .-. || .-. : 
     '  '--'\|  | |  |'  '--'  ||  |   |  |' '-' '|  ||  |    \   --.  |  |  '  ''  '\ `-' |\   --. 
      `-----'`--' `--' `------' `--'   `--' `---' `--''--'     `----'  `--'   `----'  `---'  `----' 
-     
+```     
 The CAGMon is the tool that evaluates the dependence between the primary and auxiliary channels of Gravitational-Wave detectors.   
 
 The goal of this project is to find a systematic way of identifying the abnormal glitches in the gravitational-wave data using various methods of correlation analysis. Usually, the community such as LIGO, Virgo, and KAGRA uses a conventional way of finding glitches in auxiliary channels of the detector - Klein-Welle, Omicron, Ordered Veto Lists, etc. However, some different ways can be possible to find and monitor them in a (quasi-) realtime. Also, the method can point out which channel is responsible for the found glitch. In this project, we study its possible to apply three different correlation methods - maximal information coefficient, Pearson's correlation coefficient, and Kendall's tau coefficient - in the gravitational wave data from the KAGRA detector.
