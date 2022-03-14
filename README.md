@@ -11,6 +11,7 @@ The goal of this project is to find a systematic way of identifying the abnormal
 ## Status
 
 [![Build Status](https://img.shields.io/badge/version-0.8.5-blue)](https://img.shields.io/badge/version-0.8.5-blue)
+[![Build Status](https://img.shields.io/badge/pypi-0.8.5-blueviolet)](https://pypi.org/project/CAGMon/)
 
 [![Build Status](https://img.shields.io/badge/license-%20GPLv3-green)](http://www.gnu.org/licenses/)
 [![Build Status](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-brightgreen)](https://minepy.readthedocs.io/en/latest/)
@@ -30,6 +31,11 @@ The CAGMon algorithm is described in
 $ git clone https://github.com/pjjung/cagmon.git
 $ cd cagmon
 $ python setup.py install
+```
+or, you can do:
+
+```sh
+$ pip install cagmon
 ```
 
 ## Syntax of configuration files (.ini)
