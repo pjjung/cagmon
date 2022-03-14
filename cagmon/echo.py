@@ -3,6 +3,8 @@
 import os
 from gwpy.time import tconvert
 
+__author__ = 'Phil Jung <pjjung@nims.re.kr>'
+
 #---------------------------------------------------------------------------------------------------------#
 
 def html_head():
