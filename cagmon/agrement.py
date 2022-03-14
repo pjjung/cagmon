@@ -27,6 +27,8 @@ from gwpy.segments import DataQualityFlag
 from gwpy.time import tconvert
 #---------------------------------------------------------------------------------------------------------#
 
+__author__ = 'Phil Jung <pjjung@nims.re.kr>'
+
 ###------------------------------------------### GENERAL ###-------------------------------------------###
 # Make folders results saved
 def Make_Directions(output_path, gst, get, main_channel, stride, sample_rate):
