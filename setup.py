@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open('README.md', 'r', encoding='utf-8') as fh:
+    long_description = fh.read()
+
 setup(
     name='CAGMon',
     version='0.8.5',
@@ -7,6 +10,8 @@ setup(
     author_email='pjjung@nims.re.kr',
     description='Correlation Analysis based on Glitch Monitoring',
     url='https://github.com/pjjung/cagmon',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(exclude=['test','examples]),
     entry_points={
         "console_scripts": [
