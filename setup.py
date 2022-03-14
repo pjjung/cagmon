@@ -6,6 +6,7 @@ setup(
     author='Phil Jung',
     author_email='pjjung@nims.re.kr',
     description='Correlation Analysis based on Glitch Monitoring',
+    url='https://github.com/pjjung/cagmon',
     packages=find_packages(exclude=['test','examples]),
     entry_points={
         "console_scripts": [
